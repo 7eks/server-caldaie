@@ -17,6 +17,9 @@ var dato = {
 //template dalla pagina html
 app.set('view engine', 'pug')
 
+//Setta la cartella pubblica
+app.use(express.static('public'))
+
 //Root normalmente ricevuta dal client
 //risponde con una pagina html creata
 //in modo dinamico

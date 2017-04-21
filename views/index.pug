@@ -1,10 +1,12 @@
 div(id='menu')
+  button(id='menu_btn')
   each val, index in result
-    button(id=index+'_btn') 
+    button(id=index+'_btn')
 div(id='pagina')
-  each val, index in result 
+  each val, index in result
     span(class=pannello) #{index}
       each val2, index2 in result[index]
         p
           span(id=index2 class='value' style="color:blue;") #{index2}
           span(id=index2+'_widget' type=val2 class='widget')
+script(src='/js/client.js')

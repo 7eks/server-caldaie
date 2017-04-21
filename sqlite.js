@@ -24,7 +24,8 @@ var sqlite = () => {
   //"node" sulla tabella "name" il valore contenuto in "value" e un timestamp
   this.tx = (get) => {
     if (scope[get.node]) {
-      //apre una finestra di TRANSACTION al fine di ottimizzare la scrittura ed eseguire le query in ordine
+      //apre una finestra di TRANSACTION al fine di ottimizzare la
+      //scrittura ed eseguire le query in ordine
       if (!scope.activedb[get.node]) {
         scope[get.node].run('BEGIN');
         scope.activedb[get.node] = true;
