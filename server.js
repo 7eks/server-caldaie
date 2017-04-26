@@ -45,6 +45,7 @@ app.get('/', (req, res) => res.render('index', {result: dato}));
 //del nodo di origine (Relativo Db)
 app.get('/dati/', (req, res) => {
   sqlite.tx(req.query)
+  wss.broadcast(req.query)
 });
 
 //Root per la ricezione e la risposta
