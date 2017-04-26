@@ -1,6 +1,6 @@
 // const a = document.querySelectorAll('*[id]')
 const ar = Array.from(document.querySelectorAll('*[id]'))
-console.log(ar)
+console.log(window)
 
 const cerchio=[' led rosso','  led verde']
 
@@ -22,7 +22,9 @@ for (let x in dati) {
   let b = ar.filter(check_presence(dati[x].name))
   if (b.length > 0){
     var c = ar.filter(check_presence(b[0].id + '_widget'))
-    console.log(c);
-    (c[0].attributes[2].value == 'bolean')?c[0].innerHTML = cerchio[dati[x].value]:c[0].innerHTML = '  ' + dati[x].value
+    ;(c[0].attributes[2].value == 'bolean')?c[0].innerHTML = cerchio[dati[x].value]:c[0].innerHTML = '  ' + dati[x].value
   }
 }
+
+// Crea connessione WebSocket
+const ws = new WebSocket('ws://' + window.location.hostname + ':' +(Number(window.location.port)+1));

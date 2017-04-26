@@ -4,8 +4,7 @@ const http = require('http')
 const sql = require("./sqlite")
 const webSocket = require('ws')
 const PORT = 3000
-const server = http.createServer(app)
-const wss = new webSocket.Server({ server })
+const wss = new webSocket.Server({ port : PORT + 1 })
 
 //funzione per il broadcast dei dati ricevuti
 wss.broadcast = function broadcast(data) {
