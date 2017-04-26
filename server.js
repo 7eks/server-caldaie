@@ -1,21 +1,22 @@
-const express = require('express')
-const app = express()
-const http = require('http')
-const sql = require("./sqlite")
-const webSocket = require('ws')
-const PORT = 3000
-const wss = new webSocket.Server({ port : PORT + 1 })
+var express = require('express')
+var app = express()
+var http = require('http')
+var sql = require("./sqlite")
+var webSocket = require('ws')
+var PORT = 3000
+var wss = new webSocket.Server({ port : PORT + 1 })
+var sqlite = new sql()
 
 //funzione per il broadcast dei dati ricevuti
 wss.broadcast = function broadcast(data) {
   wss.clients.forEach(function each(client) {
-    if (client.readyState === WebSocket.OPEN) {
+    if (client.readyState === webSocket.OPEN) {
       client.send(data);
     }
   })
 }
 
-
+sqlite.initdb()
 var dato = {
   'prs': {
     'prs_caldaia2': 'bolean',
@@ -43,8 +44,9 @@ app.get('/', (req, res) => res.render('index', {result: dato}));
 //variabile con il suo valore ed il nome
 //del nodo di origine (Relativo Db)
 app.get('/dati/', (req, res) => {
+  console.log(req.query)
+  wss.broadcast(JSON.stringify(req.query))
   sqlite.tx(req.query)
-  wss.broadcast(req.query)
 });
 
 //Root per la ricezione e la risposta
