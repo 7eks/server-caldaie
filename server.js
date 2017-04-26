@@ -1,7 +1,21 @@
-var express = require('express');
-var app = express();
-const PORT = 3000;
-var sql = require("./sqlite")
+const express = require('express')
+const app = express()
+const http = require('http')
+const sql = require("./sqlite")
+const webSocket = require('ws')
+const PORT = 3000
+const server = http.createServer(app)
+const wss = new webSocket.Server({ server })
+
+//funzione per il broadcast dei dati ricevuti
+wss.broadcast = function broadcast(data) {
+  wss.clients.forEach(function each(client) {
+    if (client.readyState === WebSocket.OPEN) {
+      client.send(data);
+    }
+  })
+}
+
 
 var dato = {
   'prs': {
@@ -29,9 +43,9 @@ app.get('/', (req, res) => res.render('index', {result: dato}));
 //riceve un oggetto contenente in nome della
 //variabile con il suo valore ed il nome
 //del nodo di origine (Relativo Db)
-app.get('/dati/', (req, res) => sqlite.tx(req.query)
-  //trasmettere i dati anche sul websocket
-);
+app.get('/dati/', (req, res) => {
+  sqlite.tx(req.query)
+});
 
 //Root per la ricezione e la risposta
 //di query sql (eseguite dal client con ajax)
