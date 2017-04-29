@@ -47,6 +47,7 @@ app.get('/dati/', (req, res) => {
   console.log(req.query)
   wss.broadcast(JSON.stringify(req.query))
   sqlite.tx(req.query)
+  res.send('')
 });
 
 //Root per la ricezione e la risposta
