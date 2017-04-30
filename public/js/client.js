@@ -1,14 +1,12 @@
-// const a = document.querySelectorAll('*[id]')
+const a = document.querySelectorAll('*[id]')
 const ar = Array.from(document.querySelectorAll('*[id]'))
-var valar =[]
 const cerchio=[' led rosso','  led verde']
-var xhttp=new XMLHttpRequest();
-var location window.location
+var xhttp=new XMLHttpRequest()
 function check_presence(artc) {return function(element){return artc === element.id}}
 
 
 // Crea connessione WebSocket
-const ws = new WebSocket('ws://' + location.hostname + ':' +(Number(location.port)+1));
+const ws = new WebSocket('ws://' + window.location.hostname + ':' +(Number(window.location.port)+1));
 
 // messaggio dal socket
 ws.addEventListener('message', function (event) {
@@ -20,9 +18,12 @@ ws.addEventListener('message', function (event) {
   }
 })
 
-//richiede un aggiornamento per i valori presenti nella pagina
+//richiede un aggiornamento per i valori presenti nella paginavar valar =[]
 function valuesid(element){return (element.className === 'value')}
 function extract(obj){return{nodo:obj.parentElement.parentElement.id, table:obj.id}}
 
-xhttp.open("POST",location.href+'/update', true)
+xhttp.open("POST",window.location.href+'update', true)
+xhttp.onreadystatechange = function () {}
+xhttp.setRequestHeader("UP", "update");
+
 xhttp.send(JSON.stringify(ar.filter(valuesid).map(extract)))
