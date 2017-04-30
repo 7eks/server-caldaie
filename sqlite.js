@@ -1,6 +1,6 @@
 var sqlite3 = require("sqlite3");
 
-module.exports = function(){
+module.exports = function() {
   scope = this
   scope.dblist = new sqlite3.Database("./db/dblist.db")
   scope.activedb = {
@@ -8,12 +8,19 @@ module.exports = function(){
   }
 
   //Inizializza i vari db contenuti nella tabella list di dblist.db
+  //e manda come risultato un ogg contenente la 'mappa' di tutti i nodi
   this.initdb = function() {
+    var lista = {}
     scope.dblist.each("SELECT * FROM list", function(err, row) {
       scope[row.name] = new sqlite3.Database("./db/" + row.name + ".db")
       scope.activedb[row.name] = false
+      scope.dblist.each('SELECT * FROM ' + row.name, function(err, row2) {
+        if (lista[row.name] === undefined) lista[row.name] = {}
+        lista[row.name][row2.name] = row2.type
+      })
       if (err) console.log(err)
     })
+    return lista
   }
 
   //Trasmette i dati ricevuti verso il database corrispondente alla propietà

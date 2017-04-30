@@ -16,16 +16,8 @@ wss.broadcast = function broadcast(data) {
   })
 }
 
-sqlite.initdb()
-var dato = {
-  'prs': {
-    'prs_caldaia2': 'bolean',
-    'prs_caldaia1': 'bolean'
-  },
-  'spoglc': {
-    'spoglc_boyler1': 'numeric'
-  }
-};
+var dato = sqlite.initdb()
+
 
 //impostazione dell'engine per il rendering del
 //template dalla pagina html
