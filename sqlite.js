@@ -1,5 +1,4 @@
 var sqlite3 = require("sqlite3");
-
 module.exports = function() {
   scope = this
   scope.dblist = new sqlite3.Database("./db/dblist.db")
@@ -35,13 +34,28 @@ module.exports = function() {
         setTimeout(() => {
           scope[get.node].run('COMMIT')
           scope.activedb[get.node] = false
-        }, 5000);
+        }, 1000);
       }
       scope[get.node].run("INSERT INTO " + get.name + " VALUES (?, ?)", [Date.now(), get.value], (err) => {
         if (err) console.log(err)
       })
     }
   };
+
+  //Restituisce l'ultimo valore della tabella richiesta del relativo db
+  this.request = function(req) {
+    if (scope[req.nodo] == true) {
+      window.setTimeout(this.request(req), 100); /* this checks the flag every 100 milliseconds*/
+    } else {
+      let tosend
+      scope[req.nodo].get('SELECT * FROM ' + req.table + ' ORDER BY time DESC LIMIT 1', (err, row) => {
+        toSend = {
+          name: req.table,
+          value: row.value
+        }
+      })
+    }
+  }
 
   //Chiude tutti i  database inizializzati
   this.closedb = function() {
@@ -53,4 +67,4 @@ module.exports = function() {
       console.log(x + '.db chiuso correttamente');
     }
   }
-};
+}

@@ -18,6 +18,19 @@ wss.broadcast = function broadcast(data) {
   })
 }
 
+request = function(req) {
+  if (sqlite[req.nodo] == true) {
+    window.setTimeout(this.request(req), 100); /* this checks the flag every 100 milliseconds*/
+  } else {
+    sqlite[req.nodo].get('SELECT * FROM ' + req.table + ' ORDER BY time DESC LIMIT 1', (err, row) => {
+      wss.broadcast(JSON.stringify({
+        name: req.table,
+        value: row.value
+      }))
+    })
+  }
+}
+
 var dato = sqlite.initdb()
 
 
@@ -54,12 +67,11 @@ app.get('/sql/', (req, res) => res.send(sqlite.query(req.query)));
 
 //Root per la richiesta di aggiornamentodella pagina
 app.post('/update', function (req, res) {
-  console.log(util.inspect(JSON.parse(req.body), false, null))
+  JSON.parse(req.body).forEach((a)=>{request(a)})
   res.end()
 })
 
 //Avvia il server http sulla porta selezionata
 app.listen(PORT, () => console.log('server running on port ' + PORT.toString()));
-
 
 process.on('exit', () => query.closedb());
